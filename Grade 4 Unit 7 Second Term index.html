@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mr Mostafa Raslan's Vocabulary</title>
+    <style>
+        :root {
+            --bg: #0f1226;
+            --card: #181b3a;
+            --ink: #eaf0ff;
+            --muted: #a9b3ff;
+            --accent: #4f46e5;
+            --glass: rgba(24, 27, 58, 0.7);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--ink);
+            min-height: 100vh;
+            padding-bottom: 50px;
+            line-height: 1.6;
+        }
+
+        /* --- Header & Glassmorphism --- */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: var(--glass);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1.5rem 1rem;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(90deg, #fff, var(--muted));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        header p {
+            color: var(--muted);
+            font-size: 1rem;
+            direction: rtl;
+        }
+
+        /* --- Layout Container --- */
+        #content-wrapper {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .category-section {
+            margin-bottom: 3rem;
+        }
+
+        h2 {
+            font-size: 1.4rem;
+            margin-bottom: 1.5rem;
+            padding-left: 10px;
+            border-left: 4px solid var(--accent);
+            color: var(--muted);
+        }
+
+        /* --- Grid & Cards --- */
+        .vocab-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: var(--card);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 24px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-height: 120px;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            background: #1e224a;
+            border-color: var(--accent);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4);
+        }
+
+        .card:active {
+            transform: scale(0.95);
+        }
+
+        .en {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .ar {
+            color: var(--muted);
+            font-size: 1rem;
+            direction: rtl;
+            display: block;
+        }
+
+        /* Responsive Tweaks */
+        @media (max-width: 600px) {
+            header h1 { font-size: 1.4rem; }
+            .vocab-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1 id="page-title">Mr Mostafa Raslan's Vocabulary</h1>
+    <p>اضغط على البطاقة لسماع نطق الكلمة الإنجليزية.</p>
+</header>
+
+<div id="content-wrapper">
+    </div>
+
+<script>
+//====================================================================//
+//== USER CUSTOMIZATION AREA: PASTE YOUR WORD LIST HERE             ==//
+//====================================================================//
+const ITEMS = [
+    // Data from Image 1
+    {en: "Axe", ar: "فأس", cat: "Unit 7: Firefighting Tools"},
+    {en: "Equipment", ar: "معدات", cat: "Unit 7: Firefighting Tools"},
+    {en: "Fire proof", ar: "مضاد للحريق", cat: "Unit 7: Firefighting Tools"},
+    {en: "Hose", ar: "خرطوم", cat: "Unit 7: Firefighting Tools"},
+    {en: "Ladder", ar: "سلم", cat: "Unit 7: Firefighting Tools"},
+    {en: "Rope", ar: "حبل", cat: "Unit 7: Firefighting Tools"},
+    {en: "Syringe", ar: "سرنجة", cat: "Unit 7: Firefighting Tools"},
+    {en: "Firefighter", ar: "رجل إطفاء", cat: "Unit 7: Firefighting Tools"},
+    
+
+
+    // Verbs Section
+    {en: "Love (v)", ar: "يحب", cat: "Verbs & Grammar"},
+    {en: "Enjoy (v)", ar: "يستمتع", cat: "Verbs & Grammar"},
+    {en: "Decide (to)", ar: "يقرر", cat: "Verbs & Grammar"},
+    {en: "Learn", ar: "يتعلم", cat: "Verbs & Grammar"}
+];
+//====================================================================//
+//== END OF CUSTOMIZATION AREA                                      ==//
+//====================================================================//
+
+function init() {
+    const wrapper = document.getElementById('content-wrapper');
+    
+    // 1. Get Unique Categories
+    const categories = [...new Set(ITEMS.map(item => item.cat))];
+
+    // 2. Generate Sections
+    categories.forEach(catName => {
+        const section = document.createElement('section');
+        section.className = 'category-section';
+
+        const title = document.createElement('h2');
+        title.textContent = catName;
+        section.appendChild(title);
+
+        const grid = document.createElement('div');
+        grid.className = 'vocab-grid';
+
+        // 3. Filter items for this category and create cards
+        const catItems = ITEMS.filter(item => item.cat === catName);
+        catItems.forEach(item => {
+            if(!item.en && !item.ar) return; // Skip empty rows
+            
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.innerHTML = `
+                <span class="en">${item.en}</span>
+                <span class="ar">${item.ar}</span>
+            `;
+            
+            card.addEventListener('click', () => speak(item.en));
+            grid.appendChild(card);
+        });
+
+        section.appendChild(grid);
+        wrapper.appendChild(section);
+    });
+}
+
+function speak(text) {
+    // Clean text: remove anything in parentheses like (v) or (n)
+    const cleanText = text.replace(/\s*\(.*?\)\s*/g, '').trim();
+    
+    // Cancel any ongoing speech
+    window.speechSynthesis.cancel();
+
+    const utterance = new SpeechSynthesisUtterance(cleanText);
+    utterance.lang = 'en-US';
+    utterance.rate = 0.85; // Slightly slower for clarity
+    
+    // Optional: find a specific high-quality voice if available
+    const voices = window.speechSynthesis.getVoices();
+    const premiumVoice = voices.find(v => v.name.includes('Google') && v.lang === 'en-US');
+    if (premiumVoice) utterance.voice = premiumVoice;
+
+    window.speechSynthesis.speak(utterance);
+}
+
+// Ensure voices are loaded for Chrome/Mobile
+window.speechSynthesis.onvoiceschanged = () => {};
+
+// Start the engine
+document.addEventListener('DOMContentLoaded', init);
+</script>
+
+</body>
+</html>
