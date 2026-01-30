@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vocabulary Learning Tool</title>
+    <style>
+        :root {
+            --bg: #0f1226;
+            --card: rgba(24, 27, 58, 0.7);
+            --ink: #eaf0ff;
+            --muted: #a9b3ff;
+            --accent: #4f46e5;
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(79, 70, 229, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(169, 179, 255, 0.05) 0%, transparent 40%);
+            color: var(--ink);
+            min-height: 100vh;
+            padding-bottom: 50px;
+            line-height: 1.6;
+        }
+
+        /* Sticky Glass Header */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            background: rgba(15, 18, 38, 0.8);
+            border-bottom: 1px solid var(--glass-border);
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+            background: linear-gradient(90deg, #fff, var(--muted));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        header p {
+            color: var(--muted);
+            font-size: 0.9rem;
+            direction: rtl;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Section Headings */
+        .category-section {
+            margin-top: 40px;
+            margin-bottom: 20px;
+        }
+
+        .category-title {
+            font-size: 1.4rem;
+            color: var(--muted);
+            border-left: 4px solid var(--accent);
+            padding-left: 15px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Responsive Grid */
+        .vocab-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+            gap: 20px;
+        }
+
+        /* Card Styling */
+        .card {
+            background: var(--card);
+            backdrop-filter: blur(5px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 24px;
+            text-align: center;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 140px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: var(--muted);
+            background: rgba(169, 179, 255, 0.1);
+            box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.4);
+        }
+
+        .card:active {
+            transform: scale(0.95);
+        }
+
+        .en-word {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #fff;
+        }
+
+        .ar-word {
+            font-size: 1.1rem;
+            color: var(--muted);
+            direction: rtl;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Speaker Icon placeholder */
+        .card::after {
+            content: '🔊';
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 0.8rem;
+            opacity: 0.3;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 40px;
+            font-size: 0.8rem;
+            color: var(--muted);
+            opacity: 0.6;
+        }
+
+        @media (max-width: 480px) {
+            .vocab-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 12px;
+            }
+            .card {
+                padding: 15px;
+                border-radius: 16px;
+            }
+            .en-word { font-size: 1.1rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1 id="main-title">Unit 7: Work and Play</h1>
+        <p>اضغط على البطاقة لسماع نطق الكلمة الإنجليزية.</p>
+    </header>
+
+    <div class="container" id="main-container">
+        </div>
+
+    <footer>
+        Educational Vocabulary Tool &bull; Created with Care
+    </footer>
+
+    <script>
+        //== USER CUSTOMIZATION AREA: PASTE YOUR WORD LIST HERE ==//
+        // Add, remove, or change items below. 
+        // 'en' = English, 'ar' = Arabic, 'cat' = Category/Group
+        const ITEMS = [
+            {en: "Axe", ar: "فأس", cat: "Equipment"},
+            {en: "Equipment", ar: "معدات", cat: "Equipment"},
+            {en: "Hose", ar: "خرطوم", cat: "Equipment"},
+            {en: "Ladder", ar: "سلم", cat: "Equipment"},
+            {en: "Rope", ar: "حبل", cat: "Equipment"},
+            {en: "Torch", ar: "كشاف", cat: "Equipment"},
+            {en: "Syringe", ar: "سرنجة", cat: "Equipment"},
+            {en: "Fire proof", ar: "مضاد للحريق", cat: "Safety"},
+            {en: "Keep calm", ar: "يبقى هادئ", cat: "Safety"},
+            {en: "Dangerous", ar: "خطير", cat: "Safety"},
+            {en: "Special clothes", ar: "ملابس خاصة", cat: "Safety"},
+            {en: "Gloves", ar: "قفازات", cat: "Safety"},
+            {en: "Firefighter", ar: "رجل اطفاء", cat: "Work"},
+            {en: "Fire engine", ar: "سيارة اطفاء", cat: "Work"},
+            {en: "Fire brigade", ar: "رجال اطفاء", cat: "Work"},
+            {en: "Difficult job", ar: "وظيفة صعبة", cat: "Work"},
+            {en: "Breathe", ar: "يتنفس", cat: "General"},
+            {en: "Smoky building", ar: "مبنى يحترق", cat: "General"},
+            {en: "Stripes", ar: "خطوط", cat: "General"},
+            {en: "Decide (to + inf)", ar: "يقرر", cat: "Grammar: Verbs + To"},
+            {en: "Want (to + inf)", ar: "يريد", cat: "Grammar: Verbs + To"},
+            {en: "Love (+ ing)", ar: "يحب", cat: "Grammar: Verbs + Ing"},
+            {en: "Enjoy (+ ing)", ar: "يستمتع", cat: "Grammar: Verbs + Ing"}
+        ];
+        //== END OF CUSTOMIZATION AREA ==//
+
+        const container = document.getElementById('main-container');
+
+        /**
+         * Core Logic: Dynamic Rendering
+         */
+        function renderVocabulary() {
+            // 1. Group items by category
+            const categories = [...new Set(ITEMS.map(item => item.cat))];
+            
+            categories.forEach(catName => {
+                // Create Section Wrap
+                const section = document.createElement('section');
+                section.className = 'category-section';
+
+                // Create Heading
+                const heading = document.createElement('h2');
+                heading.className = 'category-title';
+                heading.innerText = catName;
+                section.appendChild(heading);
+
+                // Create Grid
+                const grid = document.createElement('div');
+                grid.className = 'vocab-grid';
+
+                // Filter items for this category
+                const filteredItems = ITEMS.filter(item => item.cat === catName);
+
+                filteredItems.forEach(item => {
+                    const card = document.createElement('div');
+                    card.className = 'card';
+                    card.innerHTML = `
+                        <div class="en-word">${item.en}</div>
+                        <div class="ar-word">${item.ar}</div>
+                    `;
+                    
+                    // Click Event for TTS
+                    card.onclick = () => speak(item.en);
+                    
+                    grid.appendChild(card);
+                });
+
+                section.appendChild(grid);
+                container.appendChild(section);
+            });
+        }
+
+        /**
+         * Text-to-Speech Engine
+         */
+        function speak(text) {
+            // Clean text: Remove anything inside parentheses like (v) or (+ ing)
+            const cleanText = text.replace(/\s*\(.*?\)\s*/g, '').trim();
+            
+            // Cancel any current speech
+            window.speechSynthesis.cancel();
+
+            const utterance = new SpeechSynthesisUtterance(cleanText);
+            utterance.lang = 'en-US';
+            utterance.rate = 0.85; // Slightly slower for clarity
+            utterance.pitch = 1;
+
+            window.speechSynthesis.speak(utterance);
+        }
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', renderVocabulary);
+    </script>
+</body>
+</html>
